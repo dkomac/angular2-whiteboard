@@ -1,0 +1,29 @@
+.pen-settings-container {
+	width: 240px;
+	height: 100%;
+	background-color: #f3f3f3;
+	padding-left: 20px;
+	position: fixed;
+	top:0;
+	right:0;
+}
+
+.set-pen-size {
+	width: 100%;
+}
+
+.color-container {
+
+	.color-choise {
+		float: left;
+		margin: 4%;
+		width:  40%;
+		height: 70px;
+		box-sizing: border-box;
+
+		&.active-color {
+			border: 3px solid white;
+		}
+	}
+}
+

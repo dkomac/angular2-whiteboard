@@ -1,0 +1,28 @@
+<div class="pen-settings-container">
+	<div class="color-container">
+
+		<md-card class="color-choise"
+		[ngClass]="{'active-color': _activeColor == colorOption}" 
+		*ngFor="let colorOption of _colorOptions" 
+		[style.background-color]="colorOption"
+		(click)="setColor(colorOption)"></md-card>
+
+	</div>
+
+	<div class="size-container">
+
+		<md-slider
+		(input)="onSliderChange($event)"
+		class="set-pen-size"
+		[thumb-label]="true"
+		[max]="50"
+        [min]="1"
+		>
+    	</md-slider>
+
+	</div>
+
+	<div class="reset">
+		<button md-button (click)="resetCanvas()">reset</button>
+	</div>
+</div>
