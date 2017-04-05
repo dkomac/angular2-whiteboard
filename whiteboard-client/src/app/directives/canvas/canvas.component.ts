@@ -1,6 +1,7 @@
 import { Component, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { UserSettingService } from '../../providers/user.setting.service';
 import { CanvasService } from '../../providers/canvas.service';
+import { SocketService } from '../../providers/socket.service';
 
 @Component({
 	selector: 'canvasComponent',
@@ -26,10 +27,16 @@ export class CanvasComponent {
 
 
 	constructor(private _userSettings: UserSettingService,
-				private _resetCanvasService: CanvasService) {
+				private _resetCanvasService: CanvasService,
+				private _socketService: SocketService) {
 		this._resetCanvasService.resetCanvasEvent.subscribe( event => {
 			this.clearCanvas();
 		});
+
+		this._socketService.canvasObservable().subscribe( mouseData => {
+			this.drawLine(mouseData);
+			console.log(mouseData, "this is in canvas!!!!")
+		})
 	}
 
 	clearCanvas() {
@@ -68,6 +75,10 @@ export class CanvasComponent {
 			this._mousePosition.newX = event.clientX - this.canvasComponent.nativeElement.getBoundingClientRect().left;
 			this._mousePosition.newY = event.clientY - this.canvasComponent.nativeElement.getBoundingClientRect().top;
 
+			this._socketService.sendMousePos(this._mousePosition);
+			this.drawLine(this._mousePosition);
+
+			/*
 			this._ctx.beginPath();
 			this._ctx.lineWidth = this._userSettings._penSize;
 	        this._ctx.lineCap = 'round';
@@ -76,6 +87,7 @@ export class CanvasComponent {
 			this._ctx.moveTo(this._mousePosition.oldX, this._mousePosition.oldY);
 			this._ctx.lineTo(this._mousePosition.newX, this._mousePosition.newY);
 			this._ctx.stroke();
+			*/
 
 
 
@@ -85,6 +97,17 @@ export class CanvasComponent {
 		}
 
 
+	}
+
+	drawLine(mousePos) {
+			this._ctx.beginPath();
+			this._ctx.lineWidth = this._userSettings._penSize;
+	        this._ctx.lineCap = 'round';
+	        this._ctx.lineJoin = 'round';
+			this._ctx.strokeStyle = this._userSettings._penColor;
+			this._ctx.moveTo(mousePos.oldX, mousePos.oldY);
+			this._ctx.lineTo(mousePos.newX, mousePos.newY);
+			this._ctx.stroke();
 	}
 
 

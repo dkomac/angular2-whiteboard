@@ -16,11 +16,17 @@ io.on('connection', (socket) => {
   socket.on('join-room', (room) => {
   	console.log("socket:", socket.id, "is trying to join room: ", room)
   	socket.join(room);
+    console.log(Object.keys( io.sockets.adapter.sids[socket.id])[1])
   });
   
   socket.on('add-message', (message) => {
     io.emit('message', {type:'new-message', text: message});    
   });
+
+  socket.on('send-mousepos', mousePos => {
+    console.log(Object.keys( io.sockets.adapter.sids[socket.id])[1])
+    socket.to(Object.keys( io.sockets.adapter.sids[socket.id])[1]).emit('new-line', {type: 'new-line', data: mousePos});
+  })
 
   socket.on('disconnect', function(){
     console.log('user disconnected');

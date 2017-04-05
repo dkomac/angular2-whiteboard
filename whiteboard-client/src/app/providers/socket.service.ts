@@ -6,6 +6,10 @@ export class SocketService {
   private url = 'http://localhost:5000';  
   private socket;
   public _socketRoom;
+
+  constructor() {
+    this.socket = io(this.url);
+  }
   
   sendMessage(message){
     this.socket.emit('add-message', message);    
@@ -18,10 +22,13 @@ export class SocketService {
   leaveRoom() {
       this.socket.emit('leave-room', this._socketRoom);
   }
+
+  sendMousePos(mousePos) {
+      this.socket.emit('send-mousepos', mousePos)
+  }
   
   setupSocket() {
     let observable = new Observable(observer => {
-      this.socket = io(this.url);
 
       this.socket.on('roomlist', (data) => {
         observer.next(data);
@@ -38,4 +45,20 @@ export class SocketService {
     })     
     return observable;
   }
+
+  canvasObservable() {
+    let observable = new Observable(observer => {
+        
+      this.socket.on('new-line', mouseData => {
+        console.log(mouseData)
+        observer.next(mouseData);
+      });
+
+      return () => {
+        this.socket.disconnect();
+      };  
+    });
+    return observable;
+  }
+
 }
