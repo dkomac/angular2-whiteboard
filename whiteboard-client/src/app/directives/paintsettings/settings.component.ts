@@ -1,6 +1,8 @@
 import { Component, Input, HostListener, ElementRef, ViewChild, Output, EventEmitter, OnChanges } from '@angular/core';
 import { UserSettingService } from '../../providers/user.setting.service';
 import { CanvasService } from '../../providers/canvas.service';
+import { SocketService } from '../../providers/socket.service';
+import { socketTypes } from '../../interfaces/socket-types.interface';
 
 @Component({
 	selector: 'settingsComponent',
@@ -14,7 +16,17 @@ export class SettingsComponent implements OnChanges {
 	private _activeColor: any;
 	private _activePenSize: any;
 	constructor(private _userSettings: UserSettingService,
-				private _CanvasService: CanvasService) {
+				private _CanvasService: CanvasService,
+				private _socketService: SocketService) {
+
+		this._socketService._socketObservable.subscribe( (socketMessage:socketTypes)=> {
+			switch (socketMessage.type) {
+				case 'reset-canvas':
+					this.resetCanvas();
+					break;
+			}
+			
+		})
 		
 	}
 

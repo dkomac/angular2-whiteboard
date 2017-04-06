@@ -6,9 +6,21 @@ export class SocketService {
     private url = 'http://localhost:5000';  
     private socket;
     public _socketRoom;
+    public _socketObservable;
 
     constructor() {
         this.socket = io(this.url);
+
+        this._socketObservable = new Observable(observer => {
+
+            this.socket.on('message', (data) => {
+                observer.next(data);    
+            });
+
+            return () => {
+                this.socket.disconnect();
+            };  
+        })     
     }
     
     sendMessage(message){
@@ -29,53 +41,6 @@ export class SocketService {
 
     getRoomList() {
         this.socket.emit('get-roomlist');
-    }
-  
-    setupSocket() {
-        let observable = new Observable(observer => {
-
-            this.socket.on('roomlist', (data) => {
-                observer.next(data);
-            });
-
-            this.socket.on('message', (data) => {
-                observer.next(data);    
-            });
-
-
-            return () => {
-                this.socket.disconnect();
-            };  
-        })     
-        return observable;
-    }
-
-    canvasObservable() {
-        let observable = new Observable(observer => {
-            
-            this.socket.on('new-line', (mouseData) => {
-                observer.next(mouseData);
-            });
-
-            return () => {
-                this.socket.disconnect();
-            };  
-        });
-        return observable;
-    }
-
-    roomDataObservable() {
-        let observable = new Observable(observer => {
-
-            this.socket.on('room-data', data => {
-                observer.next(data);
-            })
-
-            return () => {
-                this.socket.disconnect();
-            };  
-        });
-        return observable;
     }
 
 }

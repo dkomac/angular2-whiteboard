@@ -36,12 +36,16 @@ export class CanvasComponent {
 			this.clearCanvas();
 		});
 
-		this._socketService.canvasObservable().subscribe( (mouseData:socketTypes)=> {
-			this.drawLine(mouseData.data);
-		})
-
-		this._socketService.roomDataObservable().subscribe( (roomData:roomData ) => {
-			roomData.data.forEach( obj => this.drawLine(obj))
+		this._socketService._socketObservable.subscribe( (socketMessage:socketTypes)=> {
+			switch (socketMessage.type) {
+				case 'new-line':
+					this.drawLine(socketMessage.data);
+					break;
+				case 'room-data':
+					socketMessage.data.data.forEach( obj => this.drawLine(obj))
+					break;	
+			}
+			
 		})
 	}
 

@@ -17,7 +17,7 @@ export class RoomlistComponent implements OnInit {
   			  	private _socketService: SocketService) { }
 
 	ngOnInit() {
-	  	this._socketService.setupSocket().subscribe( (message: socketTypes) => {
+	  	this._socketService._socketObservable.subscribe( (message: socketTypes) => {
 	  		switch (message.type) {
 	  			case "roomlist":
 	  				this._roomlist = message.data;

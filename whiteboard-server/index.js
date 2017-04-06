@@ -11,13 +11,12 @@ io.on('connection', (socket) => {
   console.log('user connected');
 
   //send roomlist to connected user
-  io.emit('roomlist', {type:'roomlist', data: rooms});
+  io.emit('message', {type:'roomlist', data: rooms});
 
   socket.on('join-room', (room) => {
-  	console.log("socket:", socket.id, "is trying to join room: ", room)
   	socket.join(room);
-    socket.emit('room-data', getRoom(socket.id));
-    console.log(Object.keys( io.sockets.adapter.sids[socket.id])[1])
+    socket.emit('message', {type:'room-data', data:getRoom(socket.id)});
+    console.log("user:", socket.id, "joined room:", Object.keys( io.sockets.adapter.sids[socket.id])[1])
   });
   
   socket.on('add-message', (message) => {
@@ -25,21 +24,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send-mousepos', (mousePos) => {
-    io.to(getRoomName(socket.id)).emit('new-line', {type: 'new-line', data: mousePos});
+    io.to(getRoomName(socket.id)).emit('message', {type: 'new-line', data: mousePos});
     let room = rooms.find( room => room.name === getRoomName(socket.id));
     room.data.push(mousePos);
-    console.log(room)
   })
 
   socket.on('get-roomlist', () => {
-    io.emit('roomlist', {type:'roomlist', data: rooms});
+    io.emit('message', {type:'roomlist', data: rooms});
   })
 
   socket.on('reset-canvas', (room) => {
-      let room = getRoom(socket.id);
-      room.data = [];
+      getRoom(socket.id).data = [];
 
-      io.to(getRoomName(socket.id)).emit('clear-canvas');
+      io.to(getRoomName(socket.id)).emit('message', {type:'reset-canvas', data:null});
   })
 
   socket.on('disconnect', function(){
@@ -64,12 +61,3 @@ let getRoomName = socketid => {
 let getRoom = socketid => {
   return rooms.find( room => room.name === getRoomName(socketid));
 }
-
-let displayUsers = () => {
-	console.log(`Sending messaged to all rooms`);
-	rooms.map( room => {
-		io.to(room).emit('message', {type:'new-message', text: `Sending this message in room: ${room}`})
-	})
-};
-
-setInterval(displayUsers, 20000);
