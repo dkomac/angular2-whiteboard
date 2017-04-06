@@ -3,6 +3,7 @@ import { UserSettingService } from '../../providers/user.setting.service';
 import { CanvasService } from '../../providers/canvas.service';
 import { SocketService } from '../../providers/socket.service';
 import { socketTypes } from '../../interfaces/socket-types.interface';
+import { roomData } from '../../interfaces/roomdata.interface';
 
 @Component({
 	selector: 'canvasComponent',
@@ -37,6 +38,10 @@ export class CanvasComponent {
 
 		this._socketService.canvasObservable().subscribe( (mouseData:socketTypes)=> {
 			this.drawLine(mouseData.data);
+		})
+
+		this._socketService.roomDataObservable().subscribe( (roomData:roomData ) => {
+			roomData.data.forEach( obj => this.drawLine(obj))
 		})
 	}
 

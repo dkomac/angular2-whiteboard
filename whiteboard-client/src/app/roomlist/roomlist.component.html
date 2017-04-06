@@ -3,5 +3,5 @@
 </p>
 
 <div class="room-container" *ngIf="_roomlist">
-	<button md-raised-button *ngFor="let room of _roomlist" (click)="joinRoom(room)">{{room}}</button>
+	<button md-raised-button *ngFor="let room of _roomlist" (click)="joinRoom(room.name)">{{room.name}}</button>
 </div>

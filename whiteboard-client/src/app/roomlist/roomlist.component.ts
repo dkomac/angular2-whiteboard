@@ -26,12 +26,6 @@ export class RoomlistComponent implements OnInit {
   				case "new-message":
 	  				console.log(message);
 	  				break;
-
-	  			default:
-	  				console.log("---- help ----");
-	  				console.log(message)
-	  				console.log("--------------");
-	  				break;
 	  		}
 
 	  	})
