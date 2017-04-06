@@ -2,6 +2,7 @@ import { Component, Input, HostListener, ElementRef, ViewChild } from '@angular/
 import { UserSettingService } from '../../providers/user.setting.service';
 import { CanvasService } from '../../providers/canvas.service';
 import { SocketService } from '../../providers/socket.service';
+import { socketTypes } from '../../interfaces/socket-types.interface';
 
 @Component({
 	selector: 'canvasComponent',
@@ -33,9 +34,8 @@ export class CanvasComponent {
 			this.clearCanvas();
 		});
 
-		this._socketService.canvasObservable().subscribe( mouseData => {
-			this.drawLine(mouseData);
-			console.log(mouseData, "this is in canvas!!!!")
+		this._socketService.canvasObservable().subscribe( (mouseData:socketTypes)=> {
+			this.drawLine(mouseData.data);
 		})
 	}
 

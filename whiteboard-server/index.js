@@ -25,7 +25,11 @@ io.on('connection', (socket) => {
 
   socket.on('send-mousepos', mousePos => {
     console.log(Object.keys( io.sockets.adapter.sids[socket.id])[1])
-    socket.to(Object.keys( io.sockets.adapter.sids[socket.id])[1]).emit('new-line', {type: 'new-line', data: mousePos});
+    io.to(Object.keys( io.sockets.adapter.sids[socket.id])[1]).emit('new-line', {type: 'new-line', data: mousePos});
+  })
+
+  socket.on('get-roomlist', () => {
+    io.emit('roomlist', {type:'roomlist', data: rooms});
   })
 
   socket.on('disconnect', function(){

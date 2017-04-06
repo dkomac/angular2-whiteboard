@@ -26,6 +26,10 @@ export class SocketService {
   sendMousePos(mousePos) {
       this.socket.emit('send-mousepos', mousePos)
   }
+
+  getRoomList() {
+    this.socket.emit('get-roomlist');
+  }
   
   setupSocket() {
     let observable = new Observable(observer => {

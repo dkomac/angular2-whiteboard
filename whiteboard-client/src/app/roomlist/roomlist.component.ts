@@ -35,6 +35,10 @@ export class RoomlistComponent implements OnInit {
 	  		}
 
 	  	})
+
+	  	
+  		this._socketService.getRoomList();
+	  	
 	}
 
 	joinRoom(room) {
