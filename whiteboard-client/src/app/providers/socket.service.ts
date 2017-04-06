@@ -53,8 +53,7 @@ export class SocketService {
   canvasObservable() {
     let observable = new Observable(observer => {
         
-      this.socket.on('new-line', mouseData => {
-        console.log(mouseData)
+      this.socket.on('new-line', (mouseData) => {
         observer.next(mouseData);
       });
 

@@ -23,9 +23,9 @@ io.on('connection', (socket) => {
     io.emit('message', {type:'new-message', text: message});    
   });
 
-  socket.on('send-mousepos', mousePos => {
+  socket.on('send-mousepos', (mousePos, settings) => {
     console.log(Object.keys( io.sockets.adapter.sids[socket.id])[1])
-    io.to(Object.keys( io.sockets.adapter.sids[socket.id])[1]).emit('new-line', {type: 'new-line', data: mousePos});
+    io.to(Object.keys( io.sockets.adapter.sids[socket.id])[1]).emit('new-line', {type: 'new-line', data: mousePos, settings: settings});
   })
 
   socket.on('get-roomlist', () => {
@@ -55,4 +55,4 @@ let displayUsers = () => {
 	})
 };
 
-setInterval(displayUsers, 10000);
+setInterval(displayUsers, 20000);

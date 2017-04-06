@@ -22,7 +22,8 @@ export class CanvasComponent {
 		oldX: 0,
 		oldY: 0,
 		newX: 0,
-		newY: 0
+		newY: 0,
+		settings: {color: '', size: 0}
 	};
 	
 
@@ -67,7 +68,6 @@ export class CanvasComponent {
 	onMousemove(event: MouseEvent) {
 
 		if(this._mouseDown) {
-			console.log("mousemove", this.canvasComponent.nativeElement.getBoundingClientRect().left)
 
 			this._mousePosition.oldX = this._mousePosition.newX;
 			this._mousePosition.oldY = this._mousePosition.newY;
@@ -75,21 +75,11 @@ export class CanvasComponent {
 			this._mousePosition.newX = event.clientX - this.canvasComponent.nativeElement.getBoundingClientRect().left;
 			this._mousePosition.newY = event.clientY - this.canvasComponent.nativeElement.getBoundingClientRect().top;
 
+			this._mousePosition.settings.size = this._userSettings._penSize;
+			this._mousePosition.settings.color = this._userSettings._penColor;
+
 			this._socketService.sendMousePos(this._mousePosition);
 			this.drawLine(this._mousePosition);
-
-			/*
-			this._ctx.beginPath();
-			this._ctx.lineWidth = this._userSettings._penSize;
-	        this._ctx.lineCap = 'round';
-	        this._ctx.lineJoin = 'round';
-			this._ctx.strokeStyle = this._userSettings._penColor;
-			this._ctx.moveTo(this._mousePosition.oldX, this._mousePosition.oldY);
-			this._ctx.lineTo(this._mousePosition.newX, this._mousePosition.newY);
-			this._ctx.stroke();
-			*/
-
-
 
 		} else {
 			this._mousePosition.newX = event.clientX - this.canvasComponent.nativeElement.getBoundingClientRect().left;
@@ -101,10 +91,10 @@ export class CanvasComponent {
 
 	drawLine(mousePos) {
 			this._ctx.beginPath();
-			this._ctx.lineWidth = this._userSettings._penSize;
+			this._ctx.lineWidth = mousePos.settings.size;
 	        this._ctx.lineCap = 'round';
 	        this._ctx.lineJoin = 'round';
-			this._ctx.strokeStyle = this._userSettings._penColor;
+			this._ctx.strokeStyle = mousePos.settings.color;
 			this._ctx.moveTo(mousePos.oldX, mousePos.oldY);
 			this._ctx.lineTo(mousePos.newX, mousePos.newY);
 			this._ctx.stroke();
