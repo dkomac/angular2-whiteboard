@@ -44,6 +44,9 @@ export class CanvasComponent {
 				case 'room-data':
 					socketMessage.data.data.forEach( obj => this.drawLine(obj))
 					break;	
+				case 'reset-canvas':
+					this.clearCanvas();
+					break;
 			}
 			
 		})

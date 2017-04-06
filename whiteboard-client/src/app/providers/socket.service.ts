@@ -43,4 +43,8 @@ export class SocketService {
         this.socket.emit('get-roomlist');
     }
 
+    resetCanvas() {
+        this.socket.emit('reset-canvas')
+    }
+
 }

@@ -23,10 +23,12 @@ io.on('connection', (socket) => {
     io.emit('message', {type:'new-message', text: message});    
   });
 
-  socket.on('send-mousepos', (mousePos) => {
-    io.to(getRoomName(socket.id)).emit('message', {type: 'new-line', data: mousePos});
+  socket.on('send-mousepos', (mouseData) => {
+    io.to(getRoomName(socket.id)).emit('message', {type: 'new-line', data: mouseData});
     let room = rooms.find( room => room.name === getRoomName(socket.id));
-    room.data.push(mousePos);
+    if(room) {
+        room.data.push(mouseData);
+    }
   })
 
   socket.on('get-roomlist', () => {

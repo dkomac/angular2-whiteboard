@@ -18,15 +18,6 @@ export class SettingsComponent implements OnChanges {
 	constructor(private _userSettings: UserSettingService,
 				private _CanvasService: CanvasService,
 				private _socketService: SocketService) {
-
-		this._socketService._socketObservable.subscribe( (socketMessage:socketTypes)=> {
-			switch (socketMessage.type) {
-				case 'reset-canvas':
-					this.resetCanvas();
-					break;
-			}
-			
-		})
 		
 	}
 
@@ -48,7 +39,7 @@ export class SettingsComponent implements OnChanges {
 	}
 
 	resetCanvas() {
-		this._CanvasService.reset();
+		this._socketService.resetCanvas();
 	}
 
 }
