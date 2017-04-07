@@ -47,4 +47,12 @@ export class SocketService {
         this.socket.emit('reset-canvas')
     }
 
+    startDrawing() {
+      this.socket.emit('start-drawing')
+    }
+
+    endDrawing() {
+      this.socket.emit('end-drawing')
+    }
+
 }

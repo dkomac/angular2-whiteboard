@@ -24,11 +24,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send-mousepos', (mouseData) => {
+    console.log(socket.isDrawing)
+    // TODO: isdrawing is undefined!!!
     io.to(getRoomName(socket.id)).emit('message', {type: 'new-line', data: mouseData});
-    let room = rooms.find( room => room.name === getRoomName(socket.id));
+    if(socket.isDrawing) {
+        socket.drawingData.push(mouseData)
+        console.log("====== HELP =========")
+        console.log(socket.drawingData)
+    }
+    /*
     if(room) {
         room.data.push(mouseData);
     }
+    */
   })
 
   socket.on('get-roomlist', () => {
@@ -50,7 +58,18 @@ io.on('connection', (socket) => {
   	console.log(socket.id, "=> left room:", room)
   })
 
-});
+  socket.on('start-draw', () => {
+    socket.isDrawing = true;
+    socket.drawingData = [];
+  })
+
+  socket.on('end-draw', () => {
+    socket.isDrawing = false;
+    let room = rooms.find( room => room.name === getRoomName(socket.id));
+    room.data.push(socket.drawingData)
+  })
+    
+  });
 
 http.listen(serverPort, () => {
   console.log(`started on port ${serverPort}`);
