@@ -9,6 +9,7 @@ let rooms = [{name:"room1", data:[]}, {name:"room2", data:[]}, {name:"room3", da
 
 io.on('connection', (socket) => {
   console.log('user connected');
+  socket.isDrawing = false;
 
   //send roomlist to connected user
   io.emit('message', {type:'roomlist', data: rooms});
@@ -24,13 +25,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send-mousepos', (mouseData) => {
-    console.log(socket.isDrawing)
-    // TODO: isdrawing is undefined!!!
     io.to(getRoomName(socket.id)).emit('message', {type: 'new-line', data: mouseData});
     if(socket.isDrawing) {
         socket.drawingData.push(mouseData)
-        console.log("====== HELP =========")
-        console.log(socket.drawingData)
     }
     /*
     if(room) {
@@ -58,12 +55,12 @@ io.on('connection', (socket) => {
   	console.log(socket.id, "=> left room:", room)
   })
 
-  socket.on('start-draw', () => {
+  socket.on('start-drawing', () => {
     socket.isDrawing = true;
     socket.drawingData = [];
   })
 
-  socket.on('end-draw', () => {
+  socket.on('end-drawing', () => {
     socket.isDrawing = false;
     let room = rooms.find( room => room.name === getRoomName(socket.id));
     room.data.push(socket.drawingData)

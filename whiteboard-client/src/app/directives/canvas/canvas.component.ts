@@ -40,13 +40,17 @@ export class CanvasComponent {
 		this._socketService._socketObservable.subscribe( (socketMessage:socketTypes)=> {
 			switch (socketMessage.type) {
 				case 'new-line':
-					console.log("NEW LINE",socketMessage.data)
 					this.drawLine(socketMessage.data);
 					break;
 				case 'room-data':
 					//this._canvasPoints = socketMessage.data.data;
-					console.log(socketMessage.data.data)
-					this.drawLine(socketMessage.data.data);
+					console.log("old data inside room -> ", socketMessage.data.data)
+					socketMessage.data.data.forEach( cordArray => {
+						cordArray.forEach( cord => {
+							this.drawLine(cord);
+						})
+					})
+					//this.drawLine(socketMessage.data.data);
 					
 					break;	
 				case 'reset-canvas':
